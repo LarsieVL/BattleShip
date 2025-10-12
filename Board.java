@@ -6,8 +6,19 @@ public class Board extends JPanel {
         setSize(500, 500);
     }
 
+    Graphics g;
+    
+    void renderBoard() {
+        paintGrid();
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
+        this.g = g;
+        renderBoard();
+    }
+
+    void paintGrid() {
         super.paintComponent(g);
         g.setColor(new Color(255, 0, 0));
         g.fillRect(0, 0, 500, 500);
@@ -22,4 +33,10 @@ public class Board extends JPanel {
             }   
         }
     }
+
+    void paintShips() {
+        g.setColor(new Color(100, 100, 100));
+        g.fillOval(100, 100, 50, 250);
+    }
+
 }

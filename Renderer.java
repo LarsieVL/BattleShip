@@ -9,7 +9,10 @@ public class Renderer {
     Board enemyBoard;
     JLabel statusLabel;
 
-    // The constructor in which we setup the game.
+    /**
+     * The constructor in which we setup the game.
+     * 
+     */
     public Renderer() {
         frame = new JFrame("BattleShip");
         frame.setSize(1050, 560);
@@ -17,9 +20,9 @@ public class Renderer {
         frame.setLayout(new BorderLayout());
         
         panel = new JPanel(new GridLayout(1, 2, 50, 0));
-        playerBoard = new Board();
+        playerBoard = new PlayerBoard();
         panel.add(playerBoard);
-        enemyBoard = new Board();
+        enemyBoard = new EnemyBoard();
         panel.add(enemyBoard);
         frame.add(panel, BorderLayout.CENTER);
 
@@ -30,6 +33,7 @@ public class Renderer {
     }
 
     void renderGame() {
-
+        playerBoard.renderBoard();
+        enemyBoard.renderBoard();
     }
 }
