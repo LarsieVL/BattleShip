@@ -2,6 +2,9 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Board extends JPanel {
+    
+    Ship[] ships;
+
     public Board() {
         setSize(500, 500);
     }
@@ -36,7 +39,13 @@ public class Board extends JPanel {
 
     void paintShips() {
         g.setColor(new Color(100, 100, 100));
-        g.fillOval(100, 100, 50, 250);
+        for (Ship s: ships) {
+            if (s.getOrientation().equals("Horizontal")){
+                g.fillOval(s.location.x * 50, s.location.y * 50, s.length * 50, 50);
+            } else {
+                g.fillOval(s.location.x * 50, s.location.y * 50, 50, s.length * 50);
+            }
+        }
     }
 
 }
