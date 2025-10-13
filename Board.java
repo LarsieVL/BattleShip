@@ -1,9 +1,12 @@
 import java.awt.*;
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Board extends JPanel {
     
     Ship[] ships;
+    ArrayList<Point> hits = new ArrayList<>();
+    ArrayList<Point> misses = new ArrayList<>();
 
     public Board() {
         setSize(500, 500);
@@ -13,6 +16,7 @@ public class Board extends JPanel {
     
     void renderBoard() {
         paintGrid();
+        paintShots(g);
     }
     
     @Override
@@ -34,6 +38,17 @@ public class Board extends JPanel {
                 }
                 g.fillRect(j * 50, i * 50, 50, 50);
             }   
+        }
+    }
+
+    void paintShots(Graphics g) {
+        g.setColor(Color.WHITE);
+        for (Point p : misses) {
+            g.fillOval(p.x * 50 + 15, p.y * 50 + 15, 20, 20);
+        }
+        g.setColor(Color.RED);
+        for (Point p : hits) {
+            g.fillOval(p.x * 50 + 15, p.y * 50 + 15, 20, 20);
         }
     }
 

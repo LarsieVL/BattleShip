@@ -15,5 +15,6 @@ class PlayerBoard extends Board {
     void renderBoard() {
         paintGrid();
         paintShips();
+        paintShots(g);
     }
 }
