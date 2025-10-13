@@ -15,11 +15,11 @@ public class Renderer {
      */
     public Renderer() {
         frame = new JFrame("BattleShip");
-        frame.setSize(1050, 560);
+        frame.setSize(1100, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         
-        panel = new JPanel(new GridLayout(1, 2, 50, 0));
+        panel = new JPanel(new GridLayout(1, 2, 0, 0));
         playerBoard = new PlayerBoard();
         panel.add(playerBoard);
         enemyBoard = new EnemyBoard();
