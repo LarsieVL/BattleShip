@@ -8,6 +8,7 @@ public class Renderer {
     Board playerBoard;
     Board enemyBoard;
     JLabel statusLabel;
+    MouseInputManager mouse;
 
     /**
      * The constructor in which we setup the game.
@@ -24,7 +25,11 @@ public class Renderer {
         panel.add(playerBoard);
         enemyBoard = new EnemyBoard();
         panel.add(enemyBoard);
+        mouse = new MouseInputManager();
+        panel.addMouseListener(mouse);
         frame.add(panel, BorderLayout.CENTER);
+
+        
 
         statusLabel = new JLabel("Here comes status of the game, very usefull");
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
