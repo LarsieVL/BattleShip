@@ -25,8 +25,6 @@ public class Renderer {
         panel.add(playerBoard);
         enemyBoard = new EnemyBoard();
         panel.add(enemyBoard);
-        mouse = new MouseInputManager();
-        panel.addMouseListener(mouse);
         frame.add(panel, BorderLayout.CENTER);
 
         
@@ -38,7 +36,7 @@ public class Renderer {
     }
 
     void renderGame() {
-        playerBoard.renderBoard();
-        enemyBoard.renderBoard();
+        playerBoard.repaint();
+        enemyBoard.repaint();
     }
 }

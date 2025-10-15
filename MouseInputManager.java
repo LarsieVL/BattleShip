@@ -1,10 +1,10 @@
 import java.awt.event.*;
 
-class MouseInputManager implements MouseListener{
+class MouseInputManager implements MouseListener {
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("You clicked the mouse at" + e.getLocationOnScreen());
+        System.out.println("You clicked the mouse at X: " + e.getX() + " Y: " + e.getY());
     }
     
     @Override

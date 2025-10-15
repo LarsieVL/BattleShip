@@ -22,4 +22,8 @@ class Ship {
     String getOrientation() {
         return orientation;
     }
+
+    void setNewLocation(Point l) {
+        location = l;
+    }
 }

@@ -10,11 +10,4 @@ class PlayerBoard extends Board {
         ships[3] = new Ship(new Point(0, 3), 4, "Horizontal");
         ships[4] = new Ship(new Point(6, 0), 5, "Vertical");
     }
-
-    @Override
-    void renderBoard() {
-        paintGrid();
-        paintShips();
-        paintShots(g);
-    }
 }

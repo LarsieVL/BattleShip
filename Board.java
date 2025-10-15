@@ -1,32 +1,70 @@
 import java.awt.*;
-import javax.swing.*;
+import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.*;
 
-public class Board extends JPanel {
+public class Board extends JPanel implements MouseListener {
     
     Ship[] ships;
     ArrayList<Point> hits = new ArrayList<>();
     ArrayList<Point> misses = new ArrayList<>();
-
+    int grabbedShipIndex = -1;
+    
     public Board() {
         setSize(500, 500);
+        addMouseListener(this);
     }
 
-    Graphics g;
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (grabbedShipIndex == -1) {
+            // Check if the player tries to grab a ship
+            int indexOfShip = checkIfShipAtLocation(e.getX() / 50, e.getY() / 50);
+            System.out.println(indexOfShip);
+            if (indexOfShip != -1) {
+                grabShip(indexOfShip);
+            }
+        } else {
+            putDownShip(e.getX() / 50, e.getY() / 50);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
     
+    Graphics graphicsVar;
+
     void renderBoard() {
-        paintGrid();
-        paintShots(g);
+        paintGrid(graphicsVar);
+        paintShips(graphicsVar);
+        paintShots(graphicsVar);
+        System.out.println("It should have rendered");
     }
     
     @Override
     public void paintComponent(Graphics g) {
-        this.g = g;
+        graphicsVar = g;
         renderBoard();
     }
 
-    void paintGrid() {
-        super.paintComponent(g);
+    void paintGrid(Graphics g) {
         g.setColor(new Color(255, 0, 0));
         g.fillRect(0, 0, 500, 500);
         for (int i = 0; i < 10; i++) {
@@ -39,6 +77,7 @@ public class Board extends JPanel {
                 g.fillRect(j * 50, i * 50, 50, 50);
             }   
         }
+        System.out.println("It should have gridded");
     }
 
     void paintShots(Graphics g) {
@@ -52,7 +91,7 @@ public class Board extends JPanel {
         }
     }
 
-    void paintShips() {
+    void paintShips(Graphics g) {
         g.setColor(new Color(100, 100, 100));
         for (Ship s: ships) {
             if (s.getOrientation().equals("Horizontal")){
@@ -63,4 +102,33 @@ public class Board extends JPanel {
         }
     }
 
+    int checkIfShipAtLocation(int x, int y) { // the ints are coördinates
+        for (int index = 0; index < ships.length; index++) {
+            if (ships[index].orientation.equals("Horizontal")) {
+                for (int i = 0; i < ships[index].getLength(); i++) {
+                    if (ships[index].location.x + i == x && ships[index].location.y == y) {
+                        return index;
+                    }
+                }
+            } else {
+                for (int i = 0; i < ships[index].getLength(); i++) {
+                    if (ships[index].location.x == x && ships[index].location.y + i == y) {
+                        return index;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    void grabShip(int index) {
+        grabbedShipIndex = index;
+    }
+
+    void putDownShip(int x, int y) {
+        ships[grabbedShipIndex].setNewLocation(new Point(x, y));
+        grabbedShipIndex = -1;
+        System.out.println("The moving has occured");
+        repaint();
+    }
 }
