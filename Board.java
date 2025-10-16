@@ -17,15 +17,20 @@ public class Board extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (grabbedShipIndex == -1) {
-            // Check if the player tries to grab a ship
-            int indexOfShip = checkIfShipAtLocation(e.getX() / 50, e.getY() / 50);
-            System.out.println(indexOfShip);
+        int indexOfShip = checkIfShipAtLocation(e.getX() / 50, e.getY() / 50);
+        if (e.isShiftDown()) {
             if (indexOfShip != -1) {
-                grabShip(indexOfShip);
+                tryToRotateShip(indexOfShip);
             }
         } else {
-            putDownShip(e.getX() / 50, e.getY() / 50);
+            if (grabbedShipIndex == -1) {
+                // Check if the player tries to grab a ship
+                if (indexOfShip != -1) {
+                    grabShip(indexOfShip);
+                }
+            } else {
+                tryToPutDownShip(e.getX() / 50, e.getY() / 50);
+            }
         }
     }
 
@@ -55,7 +60,6 @@ public class Board extends JPanel implements MouseListener {
         paintGrid(graphicsVar);
         paintShips(graphicsVar);
         paintShots(graphicsVar);
-        System.out.println("It should have rendered");
     }
     
     @Override
@@ -77,7 +81,6 @@ public class Board extends JPanel implements MouseListener {
                 g.fillRect(j * 50, i * 50, 50, 50);
             }   
         }
-        System.out.println("It should have gridded");
     }
 
     void paintShots(Graphics g) {
@@ -104,13 +107,13 @@ public class Board extends JPanel implements MouseListener {
 
     int checkIfShipAtLocation(int x, int y) { // the ints are coördinates
         for (int index = 0; index < ships.length; index++) {
-            if (ships[index].orientation.equals("Horizontal")) {
+            if (ships[index].orientation.equals("Horizontal") && index != grabbedShipIndex) {
                 for (int i = 0; i < ships[index].getLength(); i++) {
                     if (ships[index].location.x + i == x && ships[index].location.y == y) {
                         return index;
                     }
                 }
-            } else {
+            } else if (ships[index].orientation.equals("Vertical") && index != grabbedShipIndex){
                 for (int i = 0; i < ships[index].getLength(); i++) {
                     if (ships[index].location.x == x && ships[index].location.y + i == y) {
                         return index;
@@ -125,10 +128,76 @@ public class Board extends JPanel implements MouseListener {
         grabbedShipIndex = index;
     }
 
-    void putDownShip(int x, int y) {
-        ships[grabbedShipIndex].setNewLocation(new Point(x, y));
+    void tryToPutDownShip(int x, int y) {
+        boolean canPutDownShip = true;
+        if (ships[grabbedShipIndex].orientation.equals("Horizontal")) {
+            for (int i = 0; i < ships[grabbedShipIndex].getLength(); i++) {
+                if (checkIfShipAtLocation(x + i, y) != -1) {
+                    canPutDownShip = false;
+                    break;
+                }
+            }
+
+            if (y > 9 || x + ships[grabbedShipIndex].getLength() - 1 > 9) {
+                canPutDownShip = false;
+            }
+        } else {
+            for (int i = 0; i < ships[grabbedShipIndex].getLength(); i++) {
+                if (checkIfShipAtLocation(x, y + i) != -1) {
+                    canPutDownShip = false;
+                    break;
+                }
+            }
+
+            if (y + ships[grabbedShipIndex].getLength() - 1 > 9 || x > 9) {
+                canPutDownShip = false;
+            }
+        }
+
+        if (canPutDownShip){
+            ships[grabbedShipIndex].setNewLocation(new Point(x, y));
+            grabbedShipIndex = -1;
+            repaint();
+        }
+    }
+
+    void tryToRotateShip(int index) {
+        grabbedShipIndex = index;
+        System.out.println("It tries to rotate");
+        boolean canRotateShip = true;
+        if (ships[index].orientation.equals("Horizontal")) {
+            for (int i = 0; i < ships[index].getLength(); i++) {
+                if (checkIfShipAtLocation(ships[index].location.x, ships[index].location.y + i) != -1) {
+                    canRotateShip = false;
+                    break;
+                }
+            }
+
+            if (ships[index].location.y + ships[index].getLength() - 1 > 9 || ships[index].location.x > 9) {
+                canRotateShip = false;
+            }
+        } else {
+            for (int i = 0; i < ships[index].getLength(); i++) {
+                if (checkIfShipAtLocation(ships[index].location.x + i, ships[index].location.y) != -1) {
+                    canRotateShip = false;
+                    break;
+                }
+            }
+
+            if (ships[index].location.y > 9 || ships[index].location.x + ships[index].getLength() - 1 > 9) {
+                canRotateShip = false;
+            }
+        }
         grabbedShipIndex = -1;
-        System.out.println("The moving has occured");
-        repaint();
+
+        if (canRotateShip) {
+            System.out.println("ROTATE!");
+            if (ships[index].orientation.equals("Horizontal")){
+                ships[index].setOrientation("Vertical");
+            } else {
+                ships[index].setOrientation("Horizontal");
+            }
+            repaint();
+        }
     }
 }

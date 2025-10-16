@@ -10,9 +10,10 @@ class EnemyBoard extends Board {
         ships[2] = new Ship(new Point(0, 0), 3, "Horizontal");
         ships[3] = new Ship(new Point(0, 0), 4, "Horizontal");
         ships[4] = new Ship(new Point(0, 0), 5, "Horizontal");
-        placeShipsRandomly();}
+        placeShipsRandomly();
+    }
 
-        private void placeShipsRandomly() {
+    private void placeShipsRandomly() {
         Random random = new Random();
         boolean[][] occupied = new boolean[10][10];
 

@@ -1,5 +1,6 @@
 import java.awt.event.*;
 
+// Probably deprecated :(
 class MouseInputManager implements MouseListener {
     
     @Override
