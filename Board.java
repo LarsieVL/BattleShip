@@ -163,7 +163,6 @@ public class Board extends JPanel implements MouseListener {
 
     void tryToRotateShip(int index) {
         grabbedShipIndex = index;
-        System.out.println("It tries to rotate");
         boolean canRotateShip = true;
         if (ships[index].orientation.equals("Horizontal")) {
             for (int i = 0; i < ships[index].getLength(); i++) {
@@ -191,7 +190,6 @@ public class Board extends JPanel implements MouseListener {
         grabbedShipIndex = -1;
 
         if (canRotateShip) {
-            System.out.println("ROTATE!");
             if (ships[index].orientation.equals("Horizontal")){
                 ships[index].setOrientation("Vertical");
             } else {
