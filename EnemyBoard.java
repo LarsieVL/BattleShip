@@ -1,7 +1,11 @@
 import java.awt.Point;
+import java.awt.event.*;
 import java.util.Random;
 
-class EnemyBoard extends Board {
+class EnemyBoard extends Board implements MouseListener{
+
+    Point selectedLocation = new Point(0, 0);
+
     public EnemyBoard() {
         setSize(500, 500);
         ships = new Ship[5];
@@ -11,6 +15,35 @@ class EnemyBoard extends Board {
         ships[3] = new Ship(new Point(0, 0), 4, "Horizontal");
         ships[4] = new Ship(new Point(0, 0), 5, "Horizontal");
         placeShipsRandomly();
+        addMouseListener(this);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        selectedLocation.x = e.getX() / 50;
+        selectedLocation.y = e.getY() / 50;
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
+
+    void shootAtSelectedLocation() {
+        if (checkIfShipAtLocation(selectedLocation.x, selectedLocation.y) == -1) { // If there is no ship.
+            misses.add(new Point(selectedLocation.x, selectedLocation.y));
+        } else {
+            hits.add(new Point(selectedLocation.x, selectedLocation.y));
+        }
+        System.out.println(misses);
+        System.out.println(hits);
     }
 
     private void placeShipsRandomly() {

@@ -1,9 +1,8 @@
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
-public class Board extends JPanel implements MouseListener {
+public class Board extends JPanel {
     
     Ship[] ships;
     ArrayList<Point> hits = new ArrayList<>();
@@ -12,46 +11,6 @@ public class Board extends JPanel implements MouseListener {
     
     public Board() {
         setSize(500, 500);
-        addMouseListener(this);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int indexOfShip = checkIfShipAtLocation(e.getX() / 50, e.getY() / 50);
-        if (e.isShiftDown()) {
-            if (indexOfShip != -1) {
-                tryToRotateShip(indexOfShip);
-            }
-        } else {
-            if (grabbedShipIndex == -1) {
-                // Check if the player tries to grab a ship
-                if (indexOfShip != -1) {
-                    grabShip(indexOfShip);
-                }
-            } else {
-                tryToPutDownShip(e.getX() / 50, e.getY() / 50);
-            }
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
     
     Graphics graphicsVar;
