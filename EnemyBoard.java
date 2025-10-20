@@ -36,14 +36,33 @@ class EnemyBoard extends Board implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {}
 
-    void shootAtSelectedLocation() {
-        if (checkIfShipAtLocation(selectedLocation.x, selectedLocation.y) == -1) { // If there is no ship.
-            misses.add(new Point(selectedLocation.x, selectedLocation.y));
+    boolean shootAtSelectedLocation() {
+        boolean alreadyAPin = false;
+        if (
+                checkIfShipAtLocation(selectedLocation.x, selectedLocation.y) == -1
+        ) { // If there is no ship.
+            for (Point miss : misses) {
+                if (miss.x == selectedLocation.x && miss.y == selectedLocation.y) {
+                    alreadyAPin = true;
+                    break;
+                }
+                if (!alreadyAPin) {
+                    misses.add(new Point(selectedLocation.x, selectedLocation.y));
+                }
+            }
         } else {
+            for (Point hit : hits) {
+                if (hit.x == selectedLocation.x && hit.y == selectedLocation.y) {
+                    alreadyAPin = true;
+                    break;
+                }
+                if (!alreadyAPin) {
+                    misses.add(new Point(selectedLocation.x, selectedLocation.y));
+                }
+            }
             hits.add(new Point(selectedLocation.x, selectedLocation.y));
         }
-        System.out.println(misses);
-        System.out.println(hits);
+        return alreadyAPin;
     }
 
     private void placeShipsRandomly() {

@@ -157,4 +157,8 @@ public class Board extends JPanel {
             repaint();
         }
     }
+
+    boolean haveAllShipsBeenDestroyed() {
+        return hits.size() == 17;
+    }
 }

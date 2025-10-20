@@ -9,8 +9,8 @@ public class Renderer implements KeyListener {
     PlayerBoard playerBoard;
     EnemyBoard enemyBoard;
     JLabel statusLabel;
-
     String turn = "";
+
     /**
      * The constructor in which we setup the game.
      * 
@@ -56,8 +56,27 @@ public class Renderer implements KeyListener {
                 startGameLoop();
             } else if (turn.equals("Player")) {
                 System.out.println("Shoot at enemy");
-                enemyBoard.shootAtSelectedLocation();
-                renderGame();
+                // true if there wasn't already a pin, so the shot landed
+                boolean wasAvailableMove = !enemyBoard.shootAtSelectedLocation();
+                if (wasAvailableMove) {
+                    // The turn goes to opponent
+                    turn = "Opponent";
+                    statusLabel.setText("The enemy gets to shoot");
+                } else {
+                    // The turn doesn't go to the next player.
+                    statusLabel.setText("You have already shot there. " 
+                    + "Click a different square and press c to shoot");
+                }
+            } else if (turn.equals("Opponent")) {
+                //TODO put code for the opponent shooting here
+            }
+            renderGame();
+            if (playerBoard.haveAllShipsBeenDestroyed()) {
+                statusLabel.setText("Game Over, you have Lost!");
+                turn = "No turn";
+            } else if (enemyBoard.haveAllShipsBeenDestroyed()) {
+                statusLabel.setText("Game Over, you have Won!");
+                turn = "No turn";
             }
         }
     }
