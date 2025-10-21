@@ -15,7 +15,7 @@ class PlayerBoard extends Board implements MouseListener {
         ships[1] = new Ship(new Point(0, 1), 3, "Horizontal");
         ships[2] = new Ship(new Point(0, 2), 3, "Horizontal");
         ships[3] = new Ship(new Point(0, 3), 4, "Horizontal");
-        ships[4] = new Ship(new Point(0, 4), 5, "Vertical");
+        ships[4] = new Ship(new Point(0, 4), 5, "Horizontal");
         addMouseListener(this);
     }
 

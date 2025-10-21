@@ -9,7 +9,7 @@ import javax.swing.*;
  * @author Lars van Luipen
  * @author 
  */
-public class Renderer implements KeyListener {
+public class Renderer implements KeyListener, ComputerAlgorithm {
     // All of the objects we are going to use.
     JFrame frame;
     JPanel panel;
@@ -92,47 +92,13 @@ public class Renderer implements KeyListener {
                     }
                     statusLabel.setText(status);
                 }
-            
             } else if (turn.equals("Opponent")) {
-                boolean shotLanded = false;
-                Random random = new Random();
-
-                while (!shotLanded) {
-                    int x = random.nextInt(10);
-                    int y = random.nextInt(10);
-
-                    boolean alreadyShot = false;
-                    for (Point miss : playerBoard.misses) {
-                        if (miss.x == x && miss.y == y) {
-                            alreadyShot = true;
-                            break;
-                        }
-                    }
-                    if (!alreadyShot) {
-                        for (Point hit : playerBoard.hits) {
-                            if (hit.x == x && hit.y == y) {
-                                alreadyShot = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!alreadyShot) {
-                        shotLanded = true;
-                        if (playerBoard.checkIfShipAtLocation(x, y) != -1) { 
-                            playerBoard.hits.add(new Point(x, y));
-                            turn = "Opponent";
-                            statusLabel.setText("The enemy HIT! They shoot again. Press 'c'");
-                        } else {
-                            playerBoard.misses.add(new Point(x, y));
-                            turn = "Player";
-                            statusLabel.setText("The enemy missed. " 
-                                + "Your turn. Click a square and press 'c'");
-                        }
-                    }
-                }
+                doRandomMove();
+                // doBestMove();
             }
+
             renderGame();
+            
             if (playerBoard.haveAllShipsBeenDestroyed()) {
                 statusLabel.setText("Game Over, you have Lost!");
                 turn = "No turn";
@@ -148,4 +114,50 @@ public class Renderer implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
+    @Override
+    public void doRandomMove() {
+        boolean shotLanded = false;
+        Random random = new Random();
+
+        while (!shotLanded) {
+            int x = random.nextInt(10);
+            int y = random.nextInt(10);
+
+            boolean alreadyShot = false;
+            for (Point miss : playerBoard.misses) {
+                if (miss.x == x && miss.y == y) {
+                    alreadyShot = true;
+                    break;
+                }
+            }
+            if (!alreadyShot) {
+                for (Point hit : playerBoard.hits) {
+                    if (hit.x == x && hit.y == y) {
+                        alreadyShot = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!alreadyShot) {
+                shotLanded = true;
+                if (playerBoard.checkIfShipAtLocation(x, y) != -1) { 
+                    playerBoard.hits.add(new Point(x, y));
+                    turn = "Opponent";
+                    statusLabel.setText("The enemy HIT! They shoot again. Press 'c'");
+                } else {
+                    playerBoard.misses.add(new Point(x, y));
+                    turn = "Player";
+                    statusLabel.setText("The enemy missed. " 
+                        + "Your turn. Click a square and press 'c'");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void doBestMove() {
+        //TODO Here we shall add the dobestmove.
+    }
 }
