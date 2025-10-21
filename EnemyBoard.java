@@ -36,8 +36,16 @@ class EnemyBoard extends Board implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {}
 
-    boolean shootAtSelectedLocation() {
+    @Override
+    void renderBoard() { // uncomment to debug
+        paintGrid(graphicsVar);
+        // paintShips(graphicsVar);
+        paintShots(graphicsVar);
+    }
+
+    int shootAtSelectedLocation() { // 0 = miss, 1 = already a pin, 2 = hit
         boolean alreadyAPin = false;
+        boolean playerCanShootAgain = false;
         if (
                 checkIfShipAtLocation(selectedLocation.x, selectedLocation.y) == -1
         ) { // If there is no ship.
@@ -46,9 +54,9 @@ class EnemyBoard extends Board implements MouseListener{
                     alreadyAPin = true;
                     break;
                 }
-                if (!alreadyAPin) {
-                    misses.add(new Point(selectedLocation.x, selectedLocation.y));
-                }
+            }
+            if (!alreadyAPin) {
+                misses.add(new Point(selectedLocation.x, selectedLocation.y));
             }
         } else {
             for (Point hit : hits) {
@@ -56,13 +64,19 @@ class EnemyBoard extends Board implements MouseListener{
                     alreadyAPin = true;
                     break;
                 }
-                if (!alreadyAPin) {
-                    misses.add(new Point(selectedLocation.x, selectedLocation.y));
-                }
             }
-            hits.add(new Point(selectedLocation.x, selectedLocation.y));
+            if (!alreadyAPin) {
+                hits.add(new Point(selectedLocation.x, selectedLocation.y));
+                playerCanShootAgain = true;
+            }
         }
-        return alreadyAPin;
+        if (alreadyAPin) {
+            return 1;
+        } else if (playerCanShootAgain) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 
     private void placeShipsRandomly() {

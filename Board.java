@@ -161,4 +161,23 @@ public class Board extends JPanel {
     boolean haveAllShipsBeenDestroyed() {
         return hits.size() == 17;
     }
+
+    int[] whichShipsDestroyed() { // Returns the lengths of ships destroyed
+        int[] shotsTracker = new int[5];
+        for (Point hit: hits) {
+            shotsTracker[checkIfShipAtLocation(hit.x, hit.y)] += 1;
+        }
+        ArrayList<Integer> lengths = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            if (shotsTracker[i] == ships[i].getLength()) {
+                lengths.add(ships[i].getLength());
+            }
+        }
+        // Convert arraylist into int[]
+        int[] result = new int[lengths.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = lengths.get(i);
+        }
+        return result;
+    }
 }
