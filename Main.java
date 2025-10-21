@@ -1,13 +1,11 @@
-
-
 /**
  * The main class for the battleship game, this is where everything starts.
  * 
  * @author Lars van Luipen
- * @author 
+ * @author Ece Camurlu
  * @date 9-10-2025
  */
-public class Main{
+public class Main {
     Renderer renderer;
 
     void run() {

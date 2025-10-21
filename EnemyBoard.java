@@ -2,10 +2,14 @@ import java.awt.Point;
 import java.awt.event.*;
 import java.util.Random;
 
-class EnemyBoard extends Board implements MouseListener{
+class EnemyBoard extends Board implements MouseListener {
 
     Point selectedLocation = new Point(0, 0);
 
+    /**
+     * The constructor of the enemyBoard which add ships to the playing field,
+     * then it puts them in random spots on the board.
+     */
     public EnemyBoard() {
         setSize(500, 500);
         ships = new Ship[5];
@@ -43,6 +47,11 @@ class EnemyBoard extends Board implements MouseListener{
         paintShots(graphicsVar);
     }
 
+    /**
+     * A method which tries to shoot at the location of the selectedLocation Point.
+     * @return it returns an int which shows the result: 
+     *      0 = miss. 1 = there was already a pin. 2 = hit.
+     */
     int shootAtSelectedLocation() { // 0 = miss, 1 = already a pin, 2 = hit
         boolean alreadyAPin = false;
         boolean playerCanShootAgain = false;

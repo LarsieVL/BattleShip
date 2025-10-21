@@ -3,6 +3,12 @@ import java.awt.event.*;
 import java.util.Random;
 import javax.swing.*;
 
+/**
+ * The most important class, it holds the window and also some of the logic which controls the game.
+ * 
+ * @author Lars van Luipen
+ * @author 
+ */
 public class Renderer implements KeyListener {
     // All of the objects we are going to use.
     JFrame frame;
@@ -39,11 +45,17 @@ public class Renderer implements KeyListener {
         frame.setVisible(true);
     }
 
+    /**
+     * A method which can be called to repaint both the player and enemy board.
+     */
     void renderGame() {
         playerBoard.repaint();
         enemyBoard.repaint();
     }
 
+    /**
+     * A method which starts the game loop, the turn goes to "Player" as opposed to "".
+     */
     void startGameLoop() {
         turn = "Player";
         playerBoard.setGameStarted();
@@ -80,6 +92,7 @@ public class Renderer implements KeyListener {
                     }
                     statusLabel.setText(status);
                 }
+            
             } else if (turn.equals("Opponent")) {
                 boolean shotLanded = false;
                 Random random = new Random();

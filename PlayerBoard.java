@@ -5,6 +5,9 @@ class PlayerBoard extends Board implements MouseListener {
     
     boolean gameStarted = false;
 
+    /**
+     * The constructor of the playerBoard which add ships to the playing field.
+     */
     public PlayerBoard() {
         setSize(500, 500);
         ships = new Ship[5];
@@ -12,7 +15,7 @@ class PlayerBoard extends Board implements MouseListener {
         ships[1] = new Ship(new Point(0, 1), 3, "Horizontal");
         ships[2] = new Ship(new Point(0, 2), 3, "Horizontal");
         ships[3] = new Ship(new Point(0, 3), 4, "Horizontal");
-        ships[4] = new Ship(new Point(6, 0), 5, "Vertical");
+        ships[4] = new Ship(new Point(0, 4), 5, "Vertical");
         addMouseListener(this);
     }
 
