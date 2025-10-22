@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.*;
 
@@ -94,7 +95,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
                 }
             } else if (turn.equals("Opponent")) {
                 doRandomMove();
-                // doBestMove();
+                doBestMove();
             }
 
             renderGame();
@@ -158,6 +159,93 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
 
     @Override
     public void doBestMove() {
-        //TODO Here we shall add the dobestmove.
+        //Initialize the map, lengthsToCheck and shipsdestroyed.
+        int[][] map = new int[10][10];
+        ArrayList<Integer> lengthsToCheck = new ArrayList<>();
+        int[] shipsDestroyed = playerBoard.whichShipsDestroyed();
+        lengthsToCheck.add(2);
+        lengthsToCheck.add(3);
+        lengthsToCheck.add(3);
+        lengthsToCheck.add(4);
+        lengthsToCheck.add(5);
+        
+        // Remove all ships which have been destroyed from the lengthsToCheck.
+        for (int ship : shipsDestroyed) {
+            lengthsToCheck.contains(ship);
+            lengthsToCheck.remove(ship);
+        }
+        
+        // Check every single position and length.
+        for (int length : lengthsToCheck) {
+            // Horizontal
+            for (int y = 0; y < 10; y++) {
+                for (int x = 0; x < 11 - length; x++) {
+                    // Check wether it can be placed at this spot.
+                    if (shipCanBeHere(x, y, length, "Horizontal")) {
+                        // If it can, update the map.
+                        for (int part = 0; part < length; part++) {
+                            map[y][x + part] += 1;
+                        }
+                    }
+                }
+            }
+            // Vertical
+            for (int y = 0; y < 11 - length; y++) {
+                for (int x = 0; x < 10; x++) {
+                    for (int part = 0; part < length; part++) {
+                        // Check wether it can be placed at this spot.
+                        if (shipCanBeHere(x, y, length, "Vertical")) {
+                            // If it can, update the map.
+                            map[y + part][x] += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Point hit: playerBoard.hits) {
+            map[hit.y][hit.x] = 0;
+        }
+        printMap(map);
+    }
+
+    /**
+     * A simple helper method for doBestMove which prints out the map.
+     * @param map a 2D array of integers to be printed.
+     */
+    void printMap(int[][] map) {
+        System.out.println("--- Probability Density Map ---");
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                System.out.print(String.format("%3d", map[i][j]));
+            }   
+            System.out.println();
+        }
+    }
+
+    /**
+     * A helper method for doBestMove, it sees wether an imaginery ship can exist 
+     * at a certain location based on misses.
+     * @param x the x location of the imaginery ship.
+     * @param y the y location of the imaginery ship
+     * @param length the lenght of the imaginery ship.
+     * @param orientation the orientation of the imaginery ship.
+     * @return wether a ship could theorethically be at the location. True if it can be there.
+     */
+    boolean shipCanBeHere(int x, int y, int length, String orientation) {
+        if (orientation.equals("Horizontal")) {
+            for (int part = 0; part < length; part++) {
+                if (playerBoard.misses.contains(new Point(x + part, y))) {
+                    return false;
+                }
+            }
+        } else {
+            for (int part = 0; part < length; part++) {
+                if (playerBoard.misses.contains(new Point(x, y + part))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
