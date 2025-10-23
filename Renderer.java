@@ -19,15 +19,11 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
     JLabel statusLabel;
     String turn = "";
 
-    /**
-     * Random number generator for the AI.
-     */
-        private Random aiRandom = new Random();
-        // --- END OF ADDED CODE ---
+    // Initialize random.
+    private Random aiRandom = new Random();
 
     /**
      * The constructor in which we setup the game.
-     * 
      */
     public Renderer() {
         frame = new JFrame("BattleShip");
@@ -154,57 +150,27 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
         doProbabilityMove();
     }
 
- /*
-  * This is the heatmap logic
-  */
+    /**
+     * This is the heatmap logic
+     */
     private void doProbabilityMove() {
-        //Initialize the map, lengthsToCheck and shipsdestroyed.
-        int[][] map = new int[10][10];
-        ArrayList<Integer> lengthsToCheck = new ArrayList<>();
-        int[] shipsDestroyed = playerBoard.whichShipsDestroyed();
-        lengthsToCheck.add(2);
-        lengthsToCheck.add(3);
-        lengthsToCheck.add(3);
-        lengthsToCheck.add(4);
-        lengthsToCheck.add(5);
-        for (int ship : shipsDestroyed) {
-            lengthsToCheck.remove((Integer) ship); // Corrected to remove the object, not by index
-        }
-        for (int length : lengthsToCheck) {
-            for (int y = 0; y < 10; y++) {
-                for (int x = 0; x < 11 - length; x++) {
-                    if (shipCanBeHere(x, y, length, "Horizontal")) {
-                        for (int part = 0; part < length; part++) {
-                             map[y][x + part] += 1;
-                        }
-                    }
-                }
-            }
-            for (int y = 0; y < 11 - length; y++) {
-                for (int x = 0; x < 10; x++) {
-                    if (shipCanBeHere(x, y, length, "Vertical")) {
-                        for (int part = 0; part < length; part++) {
-                            map[y + part][x] += 1;
-                        }
-                    }
-                }
-            }
-        }
+        int[][] map = createMap();
+
         ArrayList<Point> activeHits = new ArrayList<>();
         for (Point hit : playerBoard.hits) {
             if (!isHitOnSunkShip(hit)) {
                 activeHits.add(hit);
             }
-         }
+        }
         for (Point hit : activeHits) {
             boolean isVertical = false;
             boolean isHorizontal = false;
 
             if (activeHits.contains(new Point(hit.x, hit.y + 1)) || activeHits.contains(new Point(hit.x, hit.y - 1))) {
-            isVertical = true;
+                isVertical = true;
             }
             if (activeHits.contains(new Point(hit.x + 1, hit.y)) || activeHits.contains(new Point(hit.x - 1, hit.y))) {
-            isHorizontal = true;
+                isHorizontal = true;
             }
 
             if (!isVertical && !isHorizontal) {
@@ -307,6 +273,32 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
      * @param orientation the orientation of the imaginery ship.
      * @return wether a ship could theorethically be at the location. True if it can be there.
      */
+    boolean shipCanBeHere(int x, int y, int length, String orientation) {
+        if (orientation.equals("Horizontal")) {
+            for (int part = 0; part < length; part++) {
+                Point p = new Point(x + part, y);
+                if (playerBoard.misses.contains(p)) {
+                     return false;
+                }
+                
+                if (playerBoard.hits.contains(p)) {
+                    return false;
+                }
+            }
+        } else {
+            for (int part = 0; part < length; part++) {
+                Point p = new Point(x, y + part);
+                if (playerBoard.misses.contains(p)) {
+                    return false;
+                }
+                if (playerBoard.hits.contains(p)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     private boolean isHitOnSunkShip(Point hit) {
         int[] shotsTracker = new int[5]; // Assumes ships array always has 5 ships
         for (Point h : playerBoard.hits) {
@@ -325,42 +317,16 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
 
         return shotsTracker[hitIndex] == playerBoard.ships[hitIndex].getLength();
     }
-    boolean shipCanBeHere(int x, int y, int length, String orientation) {
-        if (orientation.equals("Horizontal")) {
-            for (int part = 0; part < length; part++) {
-                Point p = new Point(x + part, y);
-                if (playerBoard.misses.contains(p)) {
-                     return false;
-                }
-
-                if (playerBoard.hits.contains(p)) {
-                     return false;
-                }
-            }
-        } else {
-            for (int part = 0; part < length; part++) {
-                Point p = new Point(x, y + part);
-                if (playerBoard.misses.contains(p)) {
-                    return false;
-                }
-                if (playerBoard.hits.contains(p)) {
-                    return false;
-            }
-            }
-        }
-        return true;
-    }
-
     // --- ADDED HELPER METHODS ---
     /**
-     * Helper method to check if a square is on the board.
-     * @param x the x-coordinate
-     * @param y the y-coordinate
-     * @return true if 0 <= x < 10 and 0 <= y < 10.
-     */
- private boolean isValid(int x, int y) {
+     * Helper method to check if a square is on the board.
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return true if 0 <= x < 10 and 0 <= y < 10.
+     */
+private boolean isValid(int x, int y) {
     return x >= 0 && x < 10 && y >= 0 && y < 10;
- }
+}
 
  /**
      * Helper method to check if a square has already been shot.
@@ -369,16 +335,52 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
      * @return true if the square is in the hits or misses list, false otherwise.
      */
  private boolean isAlreadyShot(int x, int y) {
-        for (Point miss : playerBoard.misses) {
-            if (miss.x == x && miss.y == y) {
-                return true;
-            }
+    for (Point miss : playerBoard.misses) {
+        if (miss.x == x && miss.y == y) {
+            return true;
+        }
     }
     for (Point hit : playerBoard.hits) {
-            if (hit.x == x && hit.y == y) {
+        if (hit.x == x && hit.y == y) {
                 return true;
+        }
+    }
+    return false;
+}
+
+    int[][] createMap() {
+        int[][] map = new int[10][10];
+        ArrayList<Integer> lengthsToCheck = new ArrayList<>();
+        int[] shipsDestroyed = playerBoard.whichShipsDestroyed();
+        lengthsToCheck.add(2);
+        lengthsToCheck.add(3);
+        lengthsToCheck.add(3);
+        lengthsToCheck.add(4);
+        lengthsToCheck.add(5);
+        for (int ship : shipsDestroyed) {
+            lengthsToCheck.remove((Integer) ship); // Corrected to remove the object, not by index
+        }
+        // Create the probability density map.
+        for (int length : lengthsToCheck) {
+            for (int y = 0; y < 10; y++) {
+                for (int x = 0; x < 11 - length; x++) {
+                    if (shipCanBeHere(x, y, length, "Horizontal")) {
+                        for (int part = 0; part < length; part++) {
+                            map[y][x + part] += 1;
+                        }
+                    }
+                }
+            }
+            for (int y = 0; y < 11 - length; y++) {
+                for (int x = 0; x < 10; x++) {
+                    if (shipCanBeHere(x, y, length, "Vertical")) {
+                        for (int part = 0; part < length; part++) {
+                            map[y + part][x] += 1;
+                        }
+                    }
+                }
             }
         }
-        return false;
+        return map;
     }
 }
