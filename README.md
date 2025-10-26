@@ -1,7 +1,7 @@
 **How to run the game:**
 1. Make sure that you hava Java installed on your device.
 2. Open the terminal in the folder with the Java Files.
-3. Type "java Main" in the terminal and press enter to start the game.
+3. Type "java Main" in the terminal and press enter to start the game if the folder already has class files, (in this repo). If it doesn't first do javac Main.java.
 
 **Setup requirements / Dependencies:**
 This game requires no external packages or libraries, As long as you have a modern version of java installed it will work.
