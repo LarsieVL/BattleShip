@@ -2,8 +2,10 @@
 1. Make sure that you hava Java installed on your device.
 2. Open the terminal in the folder with the Java Files.
 3. Type "java Main" in the terminal and press enter to start the game.
+
 **Setup requirements / Dependencies:**
 This game requires no external packages or libraries, As long as you have a modern version of java installed it will work.
+
 **Features to test:**
 Everything you can do in the game is also explained in the game itself thorugh the status bar on the bottom, but here are they once more:
 1. Moving the ships by clicking once to select them, and once more to move them to a different location. (If you click while moving the mouse it is registered as a drag so make sure to only click while the cursor is not moving).
