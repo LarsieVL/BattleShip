@@ -4,10 +4,10 @@ import javax.swing.*;
 
 /**
  * The big Board class, this class is used as a base by PlayerBoard and EnemyBoard,
- * It contains many methods which are usefull for both of the subclasses.
+ * It contains many methods that are useful for both of the subclasses.
  * 
  * @author Lars van Luipen
- * @author 
+ * @author Ece Camurlu
  */
 public class Board extends JPanel {
     
