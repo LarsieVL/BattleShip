@@ -409,44 +409,4 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
         }
         return false;
     }
-
-    /**
-     * Creates the base probability density map ("Search" map).
-     * @return The initial 10x10 probability map before hunt logic is applied.
-     */
-    int[][] createMap() {
-        int[][] map = new int[10][10];
-        ArrayList<Integer> lengthsToCheck = new ArrayList<>();
-        int[] shipsDestroyed = playerBoard.whichShipsDestroyed();
-        lengthsToCheck.add(2);
-        lengthsToCheck.add(3);
-        lengthsToCheck.add(3);
-        lengthsToCheck.add(4);
-        lengthsToCheck.add(5);
-        for (int ship : shipsDestroyed) {
-            lengthsToCheck.remove((Integer) ship);
-        }
-        // Create the probability density map.
-        for (int length : lengthsToCheck) {
-            for (int y = 0; y < 10; y++) {
-                for (int x = 0; x < 11 - length; x++) {
-                    if (shipCanBeHere(x, y, length, "Horizontal")) {
-                        for (int part = 0; part < length; part++) {
-                            map[y][x + part] += 1;
-                        }
-                    }
-                }
-            }
-            for (int y = 0; y < 11 - length; y++) {
-                for (int x = 0; x < 10; x++) {
-                    if (shipCanBeHere(x, y, length, "Vertical")) {
-                        for (int part = 0; part < length; part++) {
-                            map[y + part][x] += 1;
-                        }
-                    }
-                }
-            }
-        }
-        return map;
-    }
 }

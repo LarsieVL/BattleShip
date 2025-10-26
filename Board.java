@@ -80,9 +80,9 @@ public class Board extends JPanel {
         g.setColor(new Color(100, 100, 100));
         for (Ship s: ships) {
             if (s.getOrientation().equals("Horizontal")) {
-                g.fillOval(s.location.x * 50, s.location.y * 50, s.length * 50, 50);
+                g.fillOval(s.getLocation().x * 50, s.getLocation().y * 50, s.length * 50, 50);
             } else {
-                g.fillOval(s.location.x * 50, s.location.y * 50, 50, s.length * 50);
+                g.fillOval(s.getLocation().x * 50, s.getLocation().y * 50, 50, s.length * 50);
             }
         }
     }
@@ -97,13 +97,15 @@ public class Board extends JPanel {
         for (int index = 0; index < ships.length; index++) {
             if (ships[index].orientation.equals("Horizontal") && index != grabbedShipIndex) {
                 for (int i = 0; i < ships[index].getLength(); i++) {
-                    if (ships[index].location.x + i == x && ships[index].location.y == y) {
+                    if (ships[index].getLocation().x + i == x 
+                            && ships[index].getLocation().y == y) {
                         return index;
                     }
                 }
             } else if (ships[index].orientation.equals("Vertical") && index != grabbedShipIndex) {
                 for (int i = 0; i < ships[index].getLength(); i++) {
-                    if (ships[index].location.x == x && ships[index].location.y + i == y) {
+                    if (ships[index].getLocation().x == x 
+                            && ships[index].getLocation().y + i == y) {
                         return index;
                     }
                 }
@@ -169,29 +171,29 @@ public class Board extends JPanel {
         if (ships[index].orientation.equals("Horizontal")) {
             for (int i = 0; i < ships[index].getLength(); i++) {
                 if (checkIfShipAtLocation(
-                        ships[index].location.x, ships[index].location.y + i) != -1
+                        ships[index].getLocation().x, ships[index].getLocation().y + i) != -1
                 ) {
                     canRotateShip = false;
                     break;
                 }
             }
 
-            if (ships[index].location.y + ships[index].getLength() - 1 > 9 
-                    || ships[index].location.x > 9) {
+            if (ships[index].getLocation().y + ships[index].getLength() - 1 > 9 
+                    || ships[index].getLocation().x > 9) {
                 canRotateShip = false;
             }
         } else {
             for (int i = 0; i < ships[index].getLength(); i++) {
                 if (checkIfShipAtLocation(
-                        ships[index].location.x + i, ships[index].location.y) != -1
+                        ships[index].getLocation().x + i, ships[index].getLocation().y) != -1
                 ) {
                     canRotateShip = false;
                     break;
                 }
             }
 
-            if (ships[index].location.y > 9 
-                    || ships[index].location.x + ships[index].getLength() - 1 > 9) {
+            if (ships[index].getLocation().y > 9 
+                    || ships[index].getLocation().x + ships[index].getLength() - 1 > 9) {
                 canRotateShip = false;
             }
         }
