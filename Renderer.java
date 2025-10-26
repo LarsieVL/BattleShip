@@ -9,7 +9,7 @@ import javax.swing.*;
  * which controls the game.
  * 
  * @author Lars van Luipen
- * @author
+ * @author Ece Camurlu
  */
 public class Renderer implements KeyListener, ComputerAlgorithm {
     // All of the objects we are going to use.
@@ -226,7 +226,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
     }
 
     /**
-     * Applies the "Hunt" bonus (+1000) to the map around active hits.
+     * Applies the Hunt bonus around active hits.
      */
     private void applyHuntBonusToMap(int[][] map) {
         ArrayList<Point> activeHits = new ArrayList<>();
@@ -240,7 +240,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
             boolean isVertical = false;
             boolean isHorizontal = false;
 
-            // Check *active* neighbors to determine orientation
+            // Checks neighbors to determine orientation
             if (activeHits.contains(new Point(hit.x, hit.y + 1)) 
                 || activeHits.contains(new Point(hit.x, hit.y - 1))) {
                 isVertical = true;
@@ -251,7 +251,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
             }
 
             // Apply bonus according to orientation
-            if (!isVertical && !isHorizontal) { // Isolated hit
+            if (!isVertical && !isHorizontal) {
                 int[] dx = { 0, 0, 1, -1 };
                 int[] dy = { 1, -1, 0, 0 };
                 for (int i = 0; i < 4; i++) {
@@ -289,7 +289,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
      * Selects the best target square based on the probability map.
      */
     private Point selectBestTarget(int[][] map) {
-        // Set already-shot squares to 0 probability
+        // Set already shot squares to 0 probability
         for (Point hit : playerBoard.hits) {
             map[hit.y][hit.x] = 0;
         }
@@ -297,7 +297,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
             map[miss.y][miss.x] = 0;
         }
 
-        // Find the highest probability and corresponding squares
+        // Find the highest probability squares
         int maxProb = -1;
         ArrayList<Point> bestMoves = new ArrayList<>();
         for (int y = 0; y < 10; y++) {
@@ -312,7 +312,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
             }
         }
 
-        // If no valid target found return null
+        // If no valid target found
         if (maxProb <= 0 || bestMoves.isEmpty()) {
             return null;
         }
@@ -347,6 +347,7 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
      */
     boolean shipCanBeHere(int x, int y, int length, String orientation) {
         if (orientation.equals("Horizontal")) {
+             // Check parts of horizontal ship
             for (int part = 0; part < length; part++) {
                 Point p = new Point(x + part, y);
                 if (playerBoard.misses.contains(p)) {
@@ -357,7 +358,8 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
                     return false;
                 }
             }
-        } else {
+        } else { // Vertical
+            // Check parts of vertical ship
             for (int part = 0; part < length; part++) {
                 Point p = new Point(x, y + part);
                 if (playerBoard.misses.contains(p)) {
@@ -372,7 +374,8 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
     }
 
     private boolean isHitOnSunkShip(Point hit) {
-        int[] shotsTracker = new int[5]; // Assumes ships array always has 5 ships
+        // Track hits by ship index
+        int[] shotsTracker = new int[5]; // Assume ships array has 5 ships
         for (Point h : playerBoard.hits) {
             if (playerBoard.ships == null || playerBoard.ships.length != 5) {
                 return true;
@@ -393,20 +396,24 @@ public class Renderer implements KeyListener, ComputerAlgorithm {
     }
 
     private boolean isValid(int x, int y) {
+        // Check if x and y are between 0-10
         return x >= 0 && x < 10 && y >= 0 && y < 10;
     }
 
     private boolean isAlreadyShot(int x, int y) {
+        // Check if the point exists in the misses list
         for (Point miss : playerBoard.misses) {
             if (miss.x == x && miss.y == y) {
                 return true;
             }
         }
+        // Check if the point exists in the hits list
         for (Point hit : playerBoard.hits) {
             if (hit.x == x && hit.y == y) {
                 return true;
             }
         }
+        // Return false if not found in either list
         return false;
     }
 }
